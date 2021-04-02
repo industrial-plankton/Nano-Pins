@@ -44,3 +44,33 @@ public:
     return _SFR_IO8(this->ioAdd) & _BV(this->PinNum);
   }
 };
+
+// Timer that once triggered and Checked needs to be reset before it before it will be true again
+class AnPin
+{
+protected:
+  const byte pin;
+  byte val;
+
+public:
+  AnPin(const unsigned int pin) : pin{pin}
+  {
+    pinMode(pin, OUTPUT);
+  }
+
+  void Set(byte val)
+  {
+    if (this->val != val)
+    {
+      this->val = val;
+      analogWrite(this->pin,calcPWM(this->val));
+    }
+  }
+};
+
+// Calculate PWM value from percentage, passed as int to avoid overflow
+byte calcPWM(uint_fast16_t percent)
+{
+  // if inverted return (255-(int)255*percent/100);
+  return ((int)255 * percent / 100);
+}
