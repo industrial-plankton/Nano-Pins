@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <avr/io.h>
 
+// Digital Pin Control
 class Pin
 {
 protected:
@@ -45,7 +46,7 @@ public:
   }
 };
 
-// Timer that once triggered and Checked needs to be reset before it before it will be true again
+// Analog Pin Control
 class AnPin
 {
 protected:
