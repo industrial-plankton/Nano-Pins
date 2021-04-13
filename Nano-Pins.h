@@ -18,9 +18,17 @@
 #include <Arduino.h>
 #include <avr/io.h>
 
+// Calculate PWM value from percentage, passed as int to avoid overflow
+byte calcPWM(uint_fast16_t percent)
+{
+    // if inverted return (255-(int)255*percent/100);
+    return ((int)255 * percent / 100);
+}
+
 // Digital Pin Control
 class Pin
 {
+    // Fully Tested as of 21-04-13
 protected:
     uint8_t ioAdd; // (ioAdd = PIN, +1 = DDR, +2 = PORT) aka (read,mode,output)
     uint8_t PinNum;
@@ -28,7 +36,7 @@ protected:
 public:
     Pin(uint8_t PinNum, uint8_t mode) : PinNum{PinNum}
     {
-        if (14 <= PinNum <= 21) //A0-A5
+        if (14 <= PinNum <= 19) //A0-A5
         {
             this->ioAdd = 0x06;
             this->PinNum -= 14;
@@ -42,7 +50,6 @@ public:
         { //D0-D7
             this->ioAdd = 0x09;
         }
-
         this->Low();
         pinMode(PinNum, mode);
     }
@@ -97,10 +104,3 @@ public:
         }
     }
 };
-
-// Calculate PWM value from percentage, passed as int to avoid overflow
-byte calcPWM(uint_fast16_t percent)
-{
-    // if inverted return (255-(int)255*percent/100);
-    return ((int)255 * percent / 100);
-}
