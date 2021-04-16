@@ -36,12 +36,12 @@ protected:
 public:
     Pin(uint8_t PinNum, uint8_t mode) : PinNum{PinNum}
     {
-        if (14 <= PinNum <= 19) //A0-A5
+        if (14 <= PinNum && PinNum <= 19) //A0-A5
         {
             this->ioAdd = 0x06;
             this->PinNum -= 14;
         }
-        else if (8 <= PinNum <= 13) //D8-D13
+        else if (8 <= PinNum && PinNum <= 13) //D8-D13
         {
             this->ioAdd = 0x03;
             this->PinNum -= 8;
@@ -90,7 +90,7 @@ protected:
     byte val;
 
 public:
-    AnPin(const unsigned int pin) : pin{pin}
+    AnPin(const byte pin) : pin{pin}
     {
         pinMode(pin, OUTPUT);
     }
