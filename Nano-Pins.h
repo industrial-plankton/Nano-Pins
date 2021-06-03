@@ -19,10 +19,10 @@
 #include <avr/io.h>
 
 // Calculate PWM value from percentage, passed as int to avoid overflow
-byte calcPWM(uint_fast16_t percent)
+byte calcPWM(int percent)
 {
     // if inverted return (255-(int)255*percent/100);
-    return ((int)255 * percent / 100);
+    return ((255 * percent) / 100);
 }
 
 // Digital Pin Control
@@ -102,5 +102,10 @@ public:
             this->val = val;
             analogWrite(this->pin, calcPWM(this->val));
         }
+    }
+
+    byte Get()
+    {
+        return val;
     }
 };
