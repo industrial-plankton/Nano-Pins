@@ -19,11 +19,7 @@
 #include <avr/io.h>
 
 // Calculate PWM value from percentage, passed as int to avoid overflow
-byte calcPWM(int percent)
-{
-    // if inverted return (255-(int)255*percent/100);
-    return ((255 * percent) / 100);
-}
+byte calcPWM(int percent);
 
 // Digital Pin Control
 class Pin
