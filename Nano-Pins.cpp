@@ -17,9 +17,16 @@
 
 #include <Nano-Pins.h>
 
-// Calculate PWM value from percentage, passed as int to avoid overflow
-byte calcPWM(int percent)
+// Calculate PWM value from value, passed as int to avoid overflow
+byte calcPWM(int val, int MaxVal)
 {
-    // if inverted return (255-(int)255*percent/100);
-    return ((255 * percent) / 100);
+    if (val >= MaxVal)
+    {
+        return 255;
+    }
+    else
+    {
+        // if inverted return (255-(int)255*val/MaxVal);
+        return ((255 * val) / MaxVal);
+    }
 }

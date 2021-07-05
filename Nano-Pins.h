@@ -19,7 +19,7 @@
 #include <avr/io.h>
 
 // Calculate PWM value from percentage, passed as int to avoid overflow
-byte calcPWM(int percent);
+byte calcPWM(int val, int MaxValue);
 
 // Digital Pin Control
 class Pin
@@ -83,12 +83,13 @@ class AnPin
 {
 protected:
     const byte pin;
-    byte val;
-
+    int val;
+    int MaxValue;
 public:
     AnPin(const byte pin) : pin{pin}
     {
         pinMode(pin, OUTPUT);
+        MaxValue = 100;
     }
 
     void Set(byte val)
@@ -96,12 +97,20 @@ public:
         if (this->val != val)
         {
             this->val = val;
-            analogWrite(this->pin, calcPWM(this->val));
+            analogWrite(this->pin, calcPWM(this->val, this->MaxValue));
         }
     }
 
-    byte Get()
+    int Get()
     {
         return val;
+    }
+
+    int SetMaxValue(int newMax = 0){
+        if (newMax != 0 && MaxValue != newMax){
+            this->MaxValue = newMax;
+            analogWrite(this->pin, calcPWM(this->val, this->MaxValue));
+        }
+        return this->MaxValue;
     }
 };
