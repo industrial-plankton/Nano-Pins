@@ -1,3 +1,6 @@
+#ifndef NANO_PINS_H
+#define NANO_PINS_H
+
 /*
 *  Copyright (C) 2020 Industrial Plankton IndustrialPlankton.com
 *  
@@ -114,3 +117,5 @@ public:
         return this->MaxValue;
     }
 };
+
+#endif
