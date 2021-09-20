@@ -46,11 +46,13 @@ public:
         {
             this->ioAdd = 0x06;
             this->PinNum -= 14;
+            this->PinNum = _BV(this->PinNum);
         }
         else if (8 <= PinNum && PinNum <= 13) //D8-D13
         {
             this->ioAdd = 0x03;
             this->PinNum -= 8;
+            this->PinNum = _BV(this->PinNum);
         }
         else
         { //D0-D7
@@ -60,32 +62,10 @@ public:
         pinMode(PinNum, mode);
     }
 
-    void Set(bool val)
-    {
-        if (val)
-        {
-            High();
-        }
-        else
-        {
-            Low();
-        }
-    }
-
-    void High()
-    {
-        _SFR_IO8(this->ioAdd + 2) |= _BV(this->PinNum);
-    }
-
-    void Low()
-    {
-        _SFR_IO8(this->ioAdd + 2) &= ~_BV(this->PinNum);
-    }
-
-    uint8_t Read()
-    {
-        return _SFR_IO8(this->ioAdd) & _BV(this->PinNum);
-    }
+    void Set(bool val);
+    void High();
+    void Low();
+    uint8_t Read();
 };
 
 // Analog Pin Control
@@ -95,6 +75,7 @@ protected:
     const byte pin;
     int val;
     int MaxValue;
+
 public:
     AnPin(const byte pin) : pin{pin}
     {
@@ -102,27 +83,9 @@ public:
         MaxValue = 100;
     }
 
-    void Set(byte val)
-    {
-        if (this->val != val)
-        {
-            this->val = val;
-            analogWrite(this->pin, calcPWM(this->val, this->MaxValue));
-        }
-    }
-
-    int Get()
-    {
-        return val;
-    }
-
-    int SetMaxValue(int newMax = 0){
-        if (newMax != 0 && MaxValue != newMax){
-            this->MaxValue = newMax;
-            analogWrite(this->pin, calcPWM(this->val, this->MaxValue));
-        }
-        return this->MaxValue;
-    }
+    void Set(byte val);
+    int Get();
+    int SetMaxValue(int newMax = 0);
 };
 
 #endif

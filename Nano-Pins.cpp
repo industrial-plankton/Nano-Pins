@@ -37,3 +37,53 @@ byte calcPWM(int val, int MaxVal)
         return ((255 * val) / MaxVal);
     }
 }
+
+//* *************
+//*Pin
+//* ******
+void Pin::Set(bool val)
+{
+    val ? High() : Low();
+}
+
+void Pin::High()
+{
+    _SFR_IO8(this->ioAdd + 2) |= this->PinNum;
+}
+
+void Pin::Low()
+{
+    _SFR_IO8(this->ioAdd + 2) &= ~this->PinNum;
+}
+
+uint8_t Pin::Read()
+{
+    return _SFR_IO8(this->ioAdd) & this->PinNum;
+}
+
+//* *************
+//*AnPin
+//* ******
+void AnPin::Set(byte val)
+{
+    if (this->val != val)
+    {
+        this->val = val;
+        analogWrite(this->pin, calcPWM(this->val, this->MaxValue));
+    }
+}
+
+int AnPin::Get()
+{
+    return val;
+}
+
+int AnPin::SetMaxValue(int newMax)
+{
+    if (newMax != 0 && MaxValue != newMax)
+    {
+        this->MaxValue = newMax;
+        analogWrite(this->pin, calcPWM(this->val, this->MaxValue));
+    }
+    return this->MaxValue;
+}
