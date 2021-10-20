@@ -57,6 +57,7 @@ public:
         else
         { //D0-D7
             this->ioAdd = 0x09;
+            this->PinNum = _BV(this->PinNum);
         }
         this->Low();
         pinMode(PinNum, mode);
