@@ -25,7 +25,7 @@ SOFTWARE.
 #include <Nano-Pins.h>
 
 // Calculate PWM value from value, passed as int to avoid overflow
-byte calcPWM(int val, int MaxVal)
+unsigned char calcPWM(int val, int MaxVal)
 {
     if (val >= MaxVal)
     {
@@ -48,17 +48,29 @@ void Pin::Set(bool val)
 
 void Pin::High()
 {
+#ifdef NonNano
+    digitalWriteFast(this->PinNum, HIGH);
+#else
     _SFR_IO8(this->ioAdd + 2) |= this->PinNum;
+#endif
 }
 
 void Pin::Low()
 {
+#ifdef NonNano 
+   digitalWriteFast(this->PinNum, LOW);
+#else
     _SFR_IO8(this->ioAdd + 2) &= ~this->PinNum;
+#endif
 }
 
-uint8_t Pin::Read()
+unsigned char Pin::Read()
 {
+#ifdef NonNano
+    return digitalReadFast(this->PinNum);
+#else
     return _SFR_IO8(this->ioAdd) & this->PinNum;
+#endif
 }
 
 //* *************

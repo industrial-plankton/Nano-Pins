@@ -26,22 +26,33 @@ SOFTWARE.
 */
 
 #include <Arduino.h>
+#include <Setttings.h>
+// Comment out if you arent using any of the Special defines and dont have the file.
+// So platformIO will build with the corrent include paths ensure you add Settings.h to the /include Directort and add the following to platformi.ini
+/* 
+build_flags =
+    -I include/
+    */
+#ifndef NonNano
 #include <avr/io.h>
+#endif
 
 // Calculate PWM value from percentage, passed as int to avoid overflow
-byte calcPWM(int val, int MaxValue);
+unsigned char calcPWM(int val, int MaxValue);
 
 // Digital Pin Control
 class Pin
 {
-    // Fully Tested as of 21-04-13
 protected:
-    uint8_t ioAdd; // (ioAdd = PIN, +1 = DDR, +2 = PORT) aka (read,mode,output)
-    uint8_t PinNum;
+#ifndef NonNano
+    unsigned char ioAdd; // (ioAdd = PIN, +1 = DDR, +2 = PORT) aka (read,mode,output)
+    #endif
+    unsigned char PinNum;
 
 public:
-    Pin(uint8_t PinNum, uint8_t mode) : PinNum{PinNum}
+    Pin(unsigned char PinNum, unsigned char mode) : PinNum{PinNum}
     {
+        #ifndef NonNano
         if (14 <= PinNum && PinNum <= 19) //A0-A5
         {
             this->ioAdd = 0x06;
@@ -59,6 +70,7 @@ public:
             this->ioAdd = 0x09;
             this->PinNum = _BV(this->PinNum);
         }
+        #endif
         this->Low();
         pinMode(PinNum, mode);
     }
@@ -66,25 +78,25 @@ public:
     void Set(bool val);
     void High();
     void Low();
-    uint8_t Read();
+    unsigned char Read();
 };
 
 // Analog Pin Control
 class AnPin
 {
 protected:
-    const byte pin;
+    const unsigned char pin;
     int val;
     int MaxValue;
 
 public:
-    AnPin(const byte pin) : pin{pin}
+    AnPin(const unsigned char pin) : pin{pin}
     {
         pinMode(pin, OUTPUT);
         MaxValue = 100;
     }
 
-    void Set(byte val);
+    void Set(unsigned char val);
     int Get();
     int SetMaxValue(int newMax = 0);
 };
