@@ -41,12 +41,12 @@ unsigned char calcPWM(int val, int MaxVal)
 //* *************
 //*Pin
 //* ******
-void Pin::Set(bool val)
+void Pin::Set(bool val) const
 {
     val ? High() : Low();
 }
 
-void Pin::High()
+void Pin::High() const
 {
 #ifdef NonNano
     digitalWriteFast(this->PinNum, HIGH);
@@ -55,16 +55,16 @@ void Pin::High()
 #endif
 }
 
-void Pin::Low()
+void Pin::Low() const
 {
-#ifdef NonNano 
-   digitalWriteFast(this->PinNum, LOW);
+#ifdef NonNano
+    digitalWriteFast(this->PinNum, LOW);
 #else
     _SFR_IO8(this->ioAdd + 2) &= ~this->PinNum;
 #endif
 }
 
-unsigned char Pin::Read()
+unsigned char Pin::Read() const
 {
 #ifdef NonNano
     return digitalReadFast(this->PinNum);
@@ -85,7 +85,7 @@ void AnPin::Set(byte val)
     }
 }
 
-int AnPin::Get()
+int AnPin::Get() const
 {
     return val;
 }

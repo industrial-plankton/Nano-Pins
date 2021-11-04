@@ -46,13 +46,13 @@ class Pin
 protected:
 #ifndef NonNano
     unsigned char ioAdd; // (ioAdd = PIN, +1 = DDR, +2 = PORT) aka (read,mode,output)
-    #endif
+#endif
     unsigned char PinNum;
 
 public:
     Pin(unsigned char PinNum, unsigned char mode) : PinNum{PinNum}
     {
-        #ifndef NonNano
+#ifndef NonNano
         if (14 <= PinNum && PinNum <= 19) //A0-A5
         {
             this->ioAdd = 0x06;
@@ -70,15 +70,15 @@ public:
             this->ioAdd = 0x09;
             this->PinNum = _BV(this->PinNum);
         }
-        #endif
+#endif
         this->Low();
         pinMode(PinNum, mode);
     }
 
-    void Set(bool val);
-    void High();
-    void Low();
-    unsigned char Read();
+    void Set(bool val) const;
+    void High() const;
+    void Low() const;
+    unsigned char Read() const;
 };
 
 // Analog Pin Control
@@ -97,7 +97,7 @@ public:
     }
 
     void Set(unsigned char val);
-    int Get();
+    int Get() const;
     int SetMaxValue(int newMax = 0);
 };
 
