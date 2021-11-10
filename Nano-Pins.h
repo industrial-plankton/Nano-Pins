@@ -26,7 +26,7 @@ SOFTWARE.
 */
 
 #include <Arduino.h>
-#include <Setttings.h>
+#include <Settings.h>
 // Comment out if you arent using any of the Special defines and dont have the file.
 // So platformIO will build with the corrent include paths ensure you add Settings.h to the /include Directort and add the following to platformi.ini
 /* 
