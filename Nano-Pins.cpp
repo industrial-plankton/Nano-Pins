@@ -76,7 +76,7 @@ unsigned char Pin::Read() const
 //* *************
 //*AnPin
 //* ******
-void AnPin::Set(byte val)
+void AnPin::Set(unsigned int val)
 {
     if (this->val != val)
     {
@@ -90,7 +90,7 @@ int AnPin::Get() const
     return val;
 }
 
-int AnPin::SetMaxValue(int newMax)
+int AnPin::SetMaxValue(unsigned int newMax)
 {
     if (newMax != 0 && MaxValue != newMax)
     {

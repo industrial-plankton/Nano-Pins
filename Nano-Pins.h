@@ -96,9 +96,9 @@ public:
         MaxValue = 100;
     }
 
-    void Set(unsigned char val);
+    void Set(unsigned int val);
     int Get() const;
-    int SetMaxValue(int newMax = 0);
+    int SetMaxValue(unsigned int newMax = 0);
 };
 
 #endif
