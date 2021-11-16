@@ -40,37 +40,27 @@ build_flags =
 // Calculate PWM value from percentage, passed as int to avoid overflow
 unsigned char calcPWM(int val, int MaxValue);
 
+// Port calculations to allow constriction of Pin with consts
+unsigned char FindPinNumfunc(unsigned char pinnum);
+unsigned char FindIOAddress(unsigned char pinnum);
+
 // Digital Pin Control
 class Pin
 {
 protected:
 #ifndef NonNano
-    unsigned char ioAdd; // (ioAdd = PIN, +1 = DDR, +2 = PORT) aka (read,mode,output)
+    const unsigned char ioAdd; // (ioAdd = PIN, +1 = DDR, +2 = PORT) aka (read,mode,output)
 #endif
-    unsigned char PinNum;
+    const unsigned char PinNum;
 
 public:
-    Pin(unsigned char PinNum, unsigned char mode) : PinNum{PinNum}
-    {
+    Pin(const unsigned char PinNum, const unsigned char mode) :
 #ifndef NonNano
-        if (14 <= PinNum && PinNum <= 19) //A0-A5
-        {
-            this->ioAdd = 0x06;
-            this->PinNum -= 14;
-            this->PinNum = _BV(this->PinNum);
-        }
-        else if (8 <= PinNum && PinNum <= 13) //D8-D13
-        {
-            this->ioAdd = 0x03;
-            this->PinNum -= 8;
-            this->PinNum = _BV(this->PinNum);
-        }
-        else
-        { //D0-D7
-            this->ioAdd = 0x09;
-            this->PinNum = _BV(this->PinNum);
-        }
+                                                                ioAdd{FindIOAddress(PinNum)},
 #endif
+                                                                PinNum{FindPinNumfunc(PinNum)}
+
+    {
         this->Low();
         pinMode(PinNum, mode);
     }
@@ -86,8 +76,8 @@ class AnPin
 {
 protected:
     const unsigned char pin;
-    int val;
-    int MaxValue;
+    unsigned int val;
+    unsigned int MaxValue;
 
 public:
     AnPin(const unsigned char pin) : pin{pin}
@@ -97,8 +87,8 @@ public:
     }
 
     void Set(unsigned int val);
-    int Get() const;
-    int SetMaxValue(unsigned int newMax = 0);
+    unsigned int Get() const;
+    unsigned int SetMaxValue(unsigned int newMax = 0);
 };
 
 #endif

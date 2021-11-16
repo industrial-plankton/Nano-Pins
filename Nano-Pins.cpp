@@ -25,7 +25,7 @@ SOFTWARE.
 #include <Nano-Pins.h>
 
 // Calculate PWM value from value, passed as int to avoid overflow
-unsigned char calcPWM(int val, int MaxVal)
+unsigned char calcPWM(const unsigned int val, const unsigned int MaxVal)
 {
     if (val >= MaxVal)
     {
@@ -38,10 +38,45 @@ unsigned char calcPWM(int val, int MaxVal)
     }
 }
 
+unsigned char FindPinNumfunc(unsigned char pinnum)
+{
+    if (14 <= pinnum && pinnum <= 19) //A0-A5
+    {
+        pinnum -= 14;
+        return _BV(pinnum);
+    }
+    else if (8 <= pinnum && pinnum <= 13) //D8-D13
+    {
+        pinnum -= 8;
+        return _BV(pinnum);
+    }
+    else
+    { //D0-D7
+
+        return _BV(pinnum);
+    }
+}
+
+unsigned char FindIOAddress(unsigned char pinnum)
+{
+    if (14 <= pinnum && pinnum <= 19) //A0-A5
+    {
+        return 0x06;
+    }
+    else if (8 <= pinnum && pinnum <= 13) //D8-D13
+    {
+        return 0x03;
+    }
+    else
+    { //D0-D7
+        return 0x09;
+    }
+}
+
 //* *************
 //*Pin
 //* ******
-void Pin::Set(bool val) const
+void Pin::Set(const bool val) const
 {
     val ? High() : Low();
 }
@@ -76,7 +111,7 @@ unsigned char Pin::Read() const
 //* *************
 //*AnPin
 //* ******
-void AnPin::Set(unsigned int val)
+void AnPin::Set(const unsigned int val)
 {
     if (this->val != val)
     {
@@ -85,12 +120,12 @@ void AnPin::Set(unsigned int val)
     }
 }
 
-int AnPin::Get() const
+unsigned int AnPin::Get() const
 {
     return val;
 }
 
-int AnPin::SetMaxValue(unsigned int newMax)
+unsigned int AnPin::SetMaxValue(const unsigned int newMax)
 {
     if (newMax != 0 && MaxValue != newMax)
     {
