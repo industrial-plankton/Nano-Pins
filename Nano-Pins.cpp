@@ -40,6 +40,7 @@ unsigned char calcPWM(const unsigned int val, const unsigned int MaxVal)
 
 unsigned char FindPinNumfunc(unsigned char pinnum)
 {
+#ifndef NonNano
     if (14 <= pinnum && pinnum <= 19) //A0-A5
     {
         pinnum -= 14;
@@ -55,6 +56,9 @@ unsigned char FindPinNumfunc(unsigned char pinnum)
 
         return _BV(pinnum);
     }
+#else
+    return pinnum;
+#endif
 }
 
 unsigned char FindIOAddress(unsigned char pinnum)
