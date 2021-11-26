@@ -26,14 +26,14 @@ SOFTWARE.
 */
 
 #include <Arduino.h>
-#include <Settings.h>
+// #include <Settings.h>
 // Comment out if you arent using any of the Special defines and dont have the file.
 // So platformIO will build with the corrent include paths ensure you add Settings.h to the /include Directort and add the following to platformi.ini
 /* 
 build_flags =
     -I include/
     */
-#ifndef NonNano
+#ifdef ARDUINO_AVR_NANO
 #include <avr/io.h>
 #endif
 
@@ -48,14 +48,14 @@ unsigned char FindIOAddress(unsigned char pinnum);
 class Pin
 {
 protected:
-#ifndef NonNano
+#ifdef ARDUINO_AVR_NANO
     const unsigned char ioAdd; // (ioAdd = PIN, +1 = DDR, +2 = PORT) aka (read,mode,output)
 #endif
     const unsigned char PinNum;
 
 public:
     Pin(const unsigned char PinNum, const unsigned char mode) :
-#ifndef NonNano
+#ifdef ARDUINO_AVR_NANO
                                                                 ioAdd{FindIOAddress(PinNum)},
 #endif
                                                                 PinNum{FindPinNumfunc(PinNum)}

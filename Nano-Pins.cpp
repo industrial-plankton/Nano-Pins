@@ -40,7 +40,7 @@ unsigned char calcPWM(const unsigned int val, const unsigned int MaxVal)
 
 unsigned char FindPinNumfunc(unsigned char pinnum)
 {
-#ifndef NonNano
+#ifdef ARDUINO_AVR_NANO
     if (14 <= pinnum && pinnum <= 19) //A0-A5
     {
         pinnum -= 14;
@@ -87,28 +87,28 @@ void Pin::Set(const bool val) const
 
 void Pin::High() const
 {
-#ifdef NonNano
-    digitalWriteFast(this->PinNum, HIGH);
-#else
+#ifdef ARDUINO_AVR_NANO
     _SFR_IO8(this->ioAdd + 2) |= this->PinNum;
+#else
+    digitalWriteFast(this->PinNum, HIGH);
 #endif
 }
 
 void Pin::Low() const
 {
-#ifdef NonNano
-    digitalWriteFast(this->PinNum, LOW);
-#else
+#ifdef ARDUINO_AVR_NANO
     _SFR_IO8(this->ioAdd + 2) &= ~this->PinNum;
+#else
+    digitalWriteFast(this->PinNum, LOW);
 #endif
 }
 
 unsigned char Pin::Read() const
 {
-#ifdef NonNano
-    return digitalReadFast(this->PinNum);
-#else
+#ifdef ARDUINO_AVR_NANO
     return _SFR_IO8(this->ioAdd) & this->PinNum;
+#else
+    return digitalReadFast(this->PinNum);
 #endif
 }
 
