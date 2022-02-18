@@ -41,19 +41,22 @@ unsigned char calcPWM(const unsigned int val, const unsigned int MaxVal)
 unsigned char FindPinNumfunc(unsigned char pinnum)
 {
 #ifdef ARDUINO_AVR_NANO
-    if (14 <= pinnum && pinnum <= 19) //A0-A5
+    if (14 <= pinnum && pinnum <= 19) // A0-A5
     {
         pinnum -= 14;
         return _BV(pinnum);
     }
-    else if (8 <= pinnum && pinnum <= 13) //D8-D13
+    else if (8 <= pinnum && pinnum <= 13) // D8-D13
     {
         pinnum -= 8;
         return _BV(pinnum);
     }
+    else if (pinnum == 0) // dont allow pin 0
+    {
+        return 0;
+    }
     else
-    { //D0-D7
-
+    { // D0-D7
         return _BV(pinnum);
     }
 #else
@@ -63,16 +66,20 @@ unsigned char FindPinNumfunc(unsigned char pinnum)
 
 unsigned char FindIOAddress(unsigned char pinnum)
 {
-    if (14 <= pinnum && pinnum <= 19) //A0-A5
+    if (14 <= pinnum && pinnum <= 19) // A0-A5
     {
         return 0x06;
     }
-    else if (8 <= pinnum && pinnum <= 13) //D8-D13
+    else if (8 <= pinnum && pinnum <= 13) // D8-D13
     {
         return 0x03;
     }
+    else if (pinnum == 0) // dont allow pin 0
+    {
+        return 0;
+    }
     else
-    { //D0-D7
+    { // D0-D7
         return 0x09;
     }
 }
@@ -82,34 +89,50 @@ unsigned char FindIOAddress(unsigned char pinnum)
 //* ******
 void Pin::Set(const bool val) const
 {
-    val ? High() : Low();
+    if (this->PinNum != 0) // dont allow pin 0
+    {
+        val ? High() : Low();
+    }
 }
 
 void Pin::High() const
 {
+    if (this->PinNum != 0) // dont allow pin 0
+    {
 #ifdef ARDUINO_AVR_NANO
-    _SFR_IO8(this->ioAdd + 2) |= this->PinNum;
+        _SFR_IO8(this->ioAdd + 2) |= this->PinNum;
 #else
-    digitalWriteFast(this->PinNum, HIGH);
+        digitalWriteFast(this->PinNum, HIGH);
 #endif
+    }
 }
 
 void Pin::Low() const
 {
+    if (this->PinNum != 0) // dont allow pin 0
+    {
 #ifdef ARDUINO_AVR_NANO
-    _SFR_IO8(this->ioAdd + 2) &= ~this->PinNum;
+        _SFR_IO8(this->ioAdd + 2) &= ~this->PinNum;
 #else
-    digitalWriteFast(this->PinNum, LOW);
+        digitalWriteFast(this->PinNum, LOW);
 #endif
+    }
 }
 
 unsigned char Pin::Read() const
 {
+    if (this->PinNum != 0) // dont allow pin 0
+    {
 #ifdef ARDUINO_AVR_NANO
-    return _SFR_IO8(this->ioAdd) & this->PinNum;
+        return _SFR_IO8(this->ioAdd) & this->PinNum;
 #else
-    return digitalReadFast(this->PinNum);
+        return digitalReadFast(this->PinNum);
 #endif
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 //* *************
@@ -120,7 +143,10 @@ void AnPin::Set(const unsigned int val)
     if (this->val != val)
     {
         this->val = val;
-        analogWrite(this->pin, calcPWM(this->val, this->MaxValue));
+        if (this->pin != 0)
+        {
+            analogWrite(this->pin, calcPWM(this->val, this->MaxValue));
+        }
     }
 }
 
@@ -134,7 +160,10 @@ unsigned int AnPin::SetMaxValue(const unsigned int newMax)
     if (newMax != 0 && MaxValue != newMax)
     {
         this->MaxValue = newMax;
-        analogWrite(this->pin, calcPWM(this->val, this->MaxValue));
+        if (this->pin != 0)
+        {
+            analogWrite(this->pin, calcPWM(this->val, this->MaxValue));
+        }
     }
     return this->MaxValue;
 }

@@ -29,7 +29,7 @@ SOFTWARE.
 // #include <Settings.h>
 // Comment out if you arent using any of the Special defines and dont have the file.
 // So platformIO will build with the corrent include paths ensure you add Settings.h to the /include Directort and add the following to platformi.ini
-/* 
+/*
 build_flags =
     -I include/
     */
@@ -61,8 +61,11 @@ public:
                                                                 PinNum{FindPinNumfunc(PinNum)}
 
     {
-        this->Low();
-        pinMode(PinNum, mode);
+        if (PinNum != 0)
+        {
+            this->Low();
+            pinMode(PinNum, mode);
+        }
     }
 
     void Set(bool val) const;
@@ -82,7 +85,10 @@ protected:
 public:
     AnPin(const unsigned char pin) : pin{pin}
     {
-        pinMode(pin, OUTPUT);
+        if (pin != 0)
+        {
+            pinMode(pin, OUTPUT);
+        }
         MaxValue = 100;
     }
 
