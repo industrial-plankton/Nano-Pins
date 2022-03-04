@@ -98,21 +98,10 @@ public:
 };
 
 // Digital Pin Control
-class PinOpenCol
+class PinOpenCol : public Pin
 {
-protected:
-#ifdef ARDUINO_AVR_NANO
-    const unsigned char ioAdd; // (ioAdd = PIN, +1 = DDR, +2 = PORT) aka (read,mode,output)
-#endif
-    const unsigned char PinNum;
-
 public:
-    PinOpenCol(const unsigned char PinNum) :
-#ifdef ARDUINO_AVR_NANO
-                                              ioAdd{FindIOAddress(PinNum)},
-#endif
-                                              PinNum{FindPinNumfunc(PinNum)}
-
+    PinOpenCol(const unsigned char PinNum) : Pin(PinNum, INPUT)
     {
         if (PinNum != 0)
         {
@@ -120,6 +109,16 @@ public:
             pinMode(PinNum, OUTPUT_OPENDRAIN);
         }
     }
+
+    void Set(bool val) const;
+    void High() const;
+    void Low() const;
+};
+
+class PinOpenColInv : public PinOpenCol
+{
+public:
+    PinOpenColInv(const unsigned char PinNum) : PinOpenCol(PinNum) {}
 
     void Set(bool val) const;
     void High() const;

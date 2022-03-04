@@ -186,7 +186,6 @@ void PinOpenCol::High() const
 #ifdef ARDUINO_AVR_NANO
         // _SFR_IO8(this->ioAdd + 2) |= this->PinNum;
 #else
-        // digitalWrite(this->PinNum, LOW);
         pinMode(this->PinNum, INPUT);
 #endif
     }
@@ -199,8 +198,39 @@ void PinOpenCol::Low() const
 #ifdef ARDUINO_AVR_NANO
         // _SFR_IO8(this->ioAdd + 2) &= ~this->PinNum;
 #else
-        // digitalWrite(this->PinNum, LOW);
         pinMode(this->PinNum, OUTPUT_OPENDRAIN);
+#endif
+    }
+}
+
+void PinOpenColInv::Set(const bool val) const
+{
+    if (this->PinNum != 0) // dont allow pin 0
+    {
+        val ? High() : Low();
+    }
+}
+
+void PinOpenColInv::High() const
+{
+    if (this->PinNum != 0) // dont allow pin 0
+    {
+#ifdef ARDUINO_AVR_NANO
+        // _SFR_IO8(this->ioAdd + 2) |= this->PinNum;
+#else
+        pinMode(this->PinNum, OUTPUT_OPENDRAIN);
+#endif
+    }
+}
+
+void PinOpenColInv::Low() const
+{
+    if (this->PinNum != 0) // dont allow pin 0
+    {
+#ifdef ARDUINO_AVR_NANO
+        // _SFR_IO8(this->ioAdd + 2) &= ~this->PinNum;
+#else
+        pinMode(this->PinNum, INPUT);
 #endif
     }
 }
