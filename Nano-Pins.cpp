@@ -167,3 +167,40 @@ unsigned int AnPin::SetMaxValue(const unsigned int newMax)
     }
     return this->MaxValue;
 }
+
+//* *************
+//*Pin Open Col/drain
+//* ******
+void PinOpenCol::Set(const bool val) const
+{
+    if (this->PinNum != 0) // dont allow pin 0
+    {
+        val ? High() : Low();
+    }
+}
+
+void PinOpenCol::High() const
+{
+    if (this->PinNum != 0) // dont allow pin 0
+    {
+#ifdef ARDUINO_AVR_NANO
+        // _SFR_IO8(this->ioAdd + 2) |= this->PinNum;
+#else
+        // digitalWrite(this->PinNum, LOW);
+        pinMode(this->PinNum, INPUT);
+#endif
+    }
+}
+
+void PinOpenCol::Low() const
+{
+    if (this->PinNum != 0) // dont allow pin 0
+    {
+#ifdef ARDUINO_AVR_NANO
+        // _SFR_IO8(this->ioAdd + 2) &= ~this->PinNum;
+#else
+        // digitalWrite(this->PinNum, LOW);
+        pinMode(this->PinNum, OUTPUT_OPENDRAIN);
+#endif
+    }
+}

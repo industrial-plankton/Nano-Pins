@@ -97,4 +97,34 @@ public:
     unsigned int SetMaxValue(unsigned int newMax = 0);
 };
 
+// Digital Pin Control
+class PinOpenCol
+{
+protected:
+#ifdef ARDUINO_AVR_NANO
+    const unsigned char ioAdd; // (ioAdd = PIN, +1 = DDR, +2 = PORT) aka (read,mode,output)
+#endif
+    const unsigned char PinNum;
+
+public:
+    PinOpenCol(const unsigned char PinNum) :
+#ifdef ARDUINO_AVR_NANO
+                                              ioAdd{FindIOAddress(PinNum)},
+#endif
+                                              PinNum{FindPinNumfunc(PinNum)}
+
+    {
+        if (PinNum != 0)
+        {
+            this->Low();
+            pinMode(PinNum, OUTPUT_OPENDRAIN);
+        }
+    }
+
+    void Set(bool val) const;
+    void High() const;
+    void Low() const;
+};
+
+// End Library Encapsulation
 #endif
