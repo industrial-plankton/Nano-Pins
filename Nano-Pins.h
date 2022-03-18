@@ -54,7 +54,7 @@ protected:
     const unsigned char PinNum;
 
 public:
-    Pin(const unsigned char PinNum, const unsigned char mode) :
+    explicit Pin(const unsigned char PinNum, const unsigned char mode) :
 #ifdef ARDUINO_AVR_NANO
                                                                 ioAdd{FindIOAddress(PinNum)},
 #endif
@@ -83,13 +83,12 @@ protected:
     unsigned int MaxValue;
 
 public:
-    AnPin(const unsigned char pin) : pin{pin}
+    explicit AnPin(const unsigned char pin) : pin{pin}, val{0}, MaxValue{100}
     {
         if (pin != 0)
         {
             pinMode(pin, OUTPUT);
         }
-        MaxValue = 100;
     }
 
     void Set(unsigned int val);
@@ -101,7 +100,7 @@ public:
 class PinOpenCol : public Pin
 {
 public:
-    PinOpenCol(const unsigned char PinNum) : Pin(PinNum, INPUT)
+    explicit PinOpenCol(const unsigned char PinNum) : Pin(PinNum, INPUT)
     {
         if (PinNum != 0)
         {
@@ -118,7 +117,7 @@ public:
 class PinOpenColInv : public PinOpenCol
 {
 public:
-    PinOpenColInv(const unsigned char PinNum) : PinOpenCol(PinNum) {}
+    explicit PinOpenColInv(const unsigned char PinNum) : PinOpenCol(PinNum) {}
 
     void Set(bool val) const;
     void High() const;
