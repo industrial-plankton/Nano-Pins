@@ -25,16 +25,24 @@ SOFTWARE.
 #include <Nano-Pins.h>
 
 // Calculate PWM value from value, passed as int to avoid overflow
-unsigned char calcPWM(const unsigned int val, const unsigned int MaxVal)
+unsigned int calcPWM(const unsigned int val, const unsigned int MaxVal)
 {
     if (val >= MaxVal)
     {
+#ifdef ARDUINO_AVR_NANO
         return 255;
+#else
+        return 32767;
+#endif
     }
     else
     {
         // if inverted return (255-(int)255*val/MaxVal);
+#ifdef ARDUINO_AVR_NANO
         return ((255 * val) / MaxVal);
+#else
+        return ((unsigned long)(32767 * val) / MaxVal);
+#endif
     }
 }
 

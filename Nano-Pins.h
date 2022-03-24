@@ -56,9 +56,9 @@ protected:
 public:
     explicit Pin(const unsigned char PinNum, const unsigned char mode) :
 #ifdef ARDUINO_AVR_NANO
-                                                                ioAdd{FindIOAddress(PinNum)},
+                                                                         ioAdd{FindIOAddress(PinNum)},
 #endif
-                                                                PinNum{FindPinNumfunc(PinNum)}
+                                                                         PinNum{FindPinNumfunc(PinNum)}
 
     {
         if (PinNum != 0)
@@ -85,6 +85,10 @@ protected:
 public:
     explicit AnPin(const unsigned char pin) : pin{pin}, val{0}, MaxValue{100}
     {
+#ifndef ARDUINO_AVR_NANO
+        analogWriteFrequency(pin, 300); // Change frequency to 300 Hz
+        analogWriteResolution(15);      // Change frequency to 300 Hz
+#endif
         if (pin != 0)
         {
             pinMode(pin, OUTPUT);
