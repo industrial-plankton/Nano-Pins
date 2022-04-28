@@ -158,6 +158,14 @@ void AnPin::Set(const unsigned int val)
     }
 }
 
+void AnPin::Set(const unsigned int val) const
+{
+    if (this->pin != 0)
+    {
+        analogWrite(this->pin, calcPWM(this->val, this->MaxValue));
+    }
+}
+
 unsigned int AnPin::Get() const
 {
     return val;

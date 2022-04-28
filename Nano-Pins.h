@@ -95,7 +95,20 @@ public:
         }
     }
 
+    AnPin(const unsigned char pin, const unsigned int MaxValue) : pin{pin}, val{0}, MaxValue{MaxValue}
+    {
+#ifndef ARDUINO_AVR_NANO
+        analogWriteFrequency(pin, 300); // Change frequency to 300 Hz
+        analogWriteResolution(15);      // Change frequency to 300 Hz
+#endif
+        if (pin != 0)
+        {
+            pinMode(pin, OUTPUT);
+        }
+    }
+
     void Set(unsigned int val);
+    void Set(const unsigned int val) const;
     unsigned int Get() const;
     unsigned int SetMaxValue(unsigned int newMax = 0);
 };
