@@ -108,7 +108,7 @@ public:
     }
 
     void Set(unsigned int val);
-    void Set(const unsigned int val) const;
+    void ConstSet(const unsigned int val) const;
     unsigned int Get() const;
     unsigned int SetMaxValue(unsigned int newMax = 0);
 };
