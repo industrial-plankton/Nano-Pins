@@ -27,22 +27,19 @@ SOFTWARE.
 // Calculate PWM value from value, passed as int to avoid overflow
 unsigned int calcPWM(const unsigned int val, const unsigned int MaxVal)
 {
+    #ifdef ARDUINO_AVR_NANO
+        const uint16_t MaxAlalogOutut = 255;
+#else
+        const uint16_t MaxAlalogOutut = 32767; // TODO make this based on the analog resolution so that it can be changed from 15 bit without breaking things
+#endif
     if (val >= MaxVal)
     {
-#ifdef ARDUINO_AVR_NANO
-        return 255;
-#else
-        return 32767;
-#endif
+        return MaxAlalogOutut;
     }
     else
     {
-        // if inverted return (255-(int)255*val/MaxVal);
-#ifdef ARDUINO_AVR_NANO
-        return ((255 * val) / MaxVal);
-#else
-        return ((unsigned long)(32767 * val) / MaxVal);
-#endif
+        // if inverted return (MaxAlalogOutut-(int)MaxAlalogOutut*val/MaxVal);
+        return ((uint32_t)(MaxAlalogOutut * val) / MaxVal);
     }
 }
 
