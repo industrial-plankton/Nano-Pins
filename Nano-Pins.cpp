@@ -106,8 +106,10 @@ void Pin::High() const
     {
 #ifdef ARDUINO_AVR_NANO
         _SFR_IO8(this->ioAdd + 2) |= this->PinNum;
-#else
+#elif defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSYLC)
         digitalWriteFast(this->PinNum, HIGH);
+#else
+        digitalWrite(this->PinNum, HIGH);
 #endif
     }
 }
@@ -118,8 +120,10 @@ void Pin::Low() const
     {
 #ifdef ARDUINO_AVR_NANO
         _SFR_IO8(this->ioAdd + 2) &= ~this->PinNum;
-#else
+#elif defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSYLC)
         digitalWriteFast(this->PinNum, LOW);
+#else
+        digitalWrite(this->PinNum, LOW);
 #endif
     }
 }
@@ -130,8 +134,10 @@ unsigned char Pin::Read() const
     {
 #ifdef ARDUINO_AVR_NANO
         return _SFR_IO8(this->ioAdd) & this->PinNum;
-#else
+#elif defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSYLC)
         return digitalReadFast(this->PinNum);
+#else
+        return digitalRead(this->PinNum);
 #endif
     }
     else
@@ -194,6 +200,7 @@ unsigned int AnPin::SetMaxValue(const unsigned int newMax)
     return this->MaxValue;
 }
 
+#if defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSYLC)
 //* *************
 //*Pin Open Col/drain
 //* ******
@@ -260,3 +267,5 @@ void PinOpenColInv::Low() const
 #endif
     }
 }
+
+#endif

@@ -27,8 +27,8 @@ SOFTWARE.
 
 #include <Arduino.h>
 // #include <Settings.h>
-// Comment out if you arent using any of the Special defines and dont have the file.
-// So platformIO will build with the corrent include paths ensure you add Settings.h to the /include Directort and add the following to platformi.ini
+// Comment out if you aren't using any of the Special defines and dont have the file.
+// So platformIO will build with the correct include paths ensure you add Settings.h to the /include Directory and add the following to platformio.ini
 /*
 build_flags =
     -I include/
@@ -85,7 +85,7 @@ protected:
 public:
     explicit AnPin(const unsigned char pin) : pin{pin}, val{0}, MaxValue{100}
     {
-#ifndef ARDUINO_AVR_NANO
+#if defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSYLC)
         analogWriteFrequency(pin, 300); // Change frequency to 300 Hz
         analogWriteResolution(15);      // Change frequency to 300 Hz
 #endif
@@ -97,7 +97,7 @@ public:
 
     AnPin(const unsigned char pin, const unsigned int MaxValue) : pin{pin}, val{0}, MaxValue{MaxValue}
     {
-#ifndef ARDUINO_AVR_NANO
+#if defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSYLC)
         analogWriteFrequency(pin, 300); // Change frequency to 300 Hz
         analogWriteResolution(15);      // Change frequency to 300 Hz
 #endif
@@ -114,6 +114,7 @@ public:
     unsigned int SetMaxValue(unsigned int newMax = 0);
 };
 
+#if defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSYLC)
 // Digital Pin Control
 class PinOpenCol : public Pin
 {
@@ -141,6 +142,7 @@ public:
     void High() const;
     void Low() const;
 };
+#endif
 
 // End Library Encapsulation
 #endif
